@@ -1,0 +1,11 @@
+{
+  "name": "deno-wasm-image-optimization",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "SoraKumo <info@croud.jp>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "deno run --watch --allow-all --node-modules-dir=false src/index.ts",
+    "deploy": "next-exec -- deployctl deploy --project deno-image --build --include=./src --prod"
+  }
+}
