@@ -2,15 +2,11 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "npm:wasm-image-optimization": "npm:wasm-image-optimization@1.0.1"
+      "npm:wasm-image-optimization-avif": "npm:wasm-image-optimization-avif@0.0.1"
     },
     "npm": {
-      "wasm-image-optimization@0.2.0": {
-        "integrity": "sha512-iH1HNwZhgVRNRrd1YP5PLLKgxtYLYWJkYaAEDG0jc+xzpbQlraQc1kZwJAF2fqJYq7YMNc48in0m9Bdns4V6Sg==",
-        "dependencies": {}
-      },
-      "wasm-image-optimization@1.0.1": {
-        "integrity": "sha512-T1DpeyWR9+b5oQ2hHvMHWChh2AyXWxFDqMr/DZKZcgKu+cwFpl1Yw7br8UTzCKtzUJymx2s4xUH1zY4dJ2INJg==",
+      "wasm-image-optimization-avif@0.0.1": {
+        "integrity": "sha512-sYo36xEJXxKzd8LDNolTrf94JKqUNitkR9nS+yQSOJdw/wplTTbe530rlQ6zIM72HtFEdPJ97aIcM+md5lEWig==",
         "dependencies": {}
       }
     }
