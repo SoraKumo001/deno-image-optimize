@@ -1,6 +1,0 @@
-{
-  "deploy": {
-    "include": ["src"],
-    "entrypoint": "src\\index.ts"
-  }
-}

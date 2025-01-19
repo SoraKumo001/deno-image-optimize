@@ -5,8 +5,11 @@
   "author": "SoraKumo <info@croud.jp>",
   "license": "MIT",
   "scripts": {
-    "dev": "deno run --watch --allow-all --node-modules-dir=false src/index.ts",
+    "dev": "deno run --watch --allow-all src/index.ts",
     "deploy": "npx next-exec -- deployctl deploy --project deno-image --build --include=./src --prod"
   },
-  "repository": "https://github.com/SoraKumo001/deno-wasm-image-optimization"
+  "repository": "https://github.com/SoraKumo001/deno-wasm-image-optimization",
+  "dependencies": {
+    "wasm-image-optimization": "^1.1.2"
+  }
 }
