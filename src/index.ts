@@ -1,4 +1,4 @@
-import { optimizeImage } from "wasm-image-optimization/esm";
+import { optimizeImage } from "npm:wasm-image-optimization/esm";
 
 const isValidUrl = (url: string) => {
   try {

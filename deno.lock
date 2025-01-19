@@ -2,6 +2,7 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "npm:wasm-image-optimization": "npm:wasm-image-optimization@1.1.2",
       "npm:wasm-image-optimization@^1.1.2": "npm:wasm-image-optimization@1.1.2"
     },
     "npm": {
