@@ -1,4 +1,5 @@
 import { optimizeImage } from "npm:wasm-image-optimization/esm";
+import { semaphore } from "npm:@node-libraries/semaphore";
 
 const isValidUrl = (url: string) => {
   try {
@@ -18,6 +19,8 @@ const isType = (accept: string | null, type: string) => {
     true
   );
 };
+
+const s = semaphore(1);
 
 Deno.serve(async (request) => {
   const url = new URL(request.url);
@@ -41,12 +44,6 @@ Deno.serve(async (request) => {
   const imageUrl = params.get("url");
   if (!imageUrl || !isValidUrl(imageUrl)) {
     return new Response("url is required", { status: 400 });
-  }
-
-  if (isAvif) {
-    url.searchParams.append("avif", isAvif.toString());
-  } else if (isWebp) {
-    url.searchParams.append("webp", isWebp.toString());
   }
 
   const cacheKey = new Request(url.toString());
@@ -90,10 +87,18 @@ Deno.serve(async (request) => {
       : contentType === "image/jpeg"
       ? "jpeg"
       : "png");
+
+  using _r = {
+    [Symbol.dispose]: ()=>{
+      s.release();
+    }
+  }
+  await s.acquire();
+
   const image = await optimizeImage({
     image: srcImage,
-    width: width ? parseInt(width) : undefined,
-    quality: quality ? parseInt(quality) : undefined,
+    width: width ? Number(width) : undefined,
+    quality: quality ? Number(quality) : undefined,
     format,
   });
   const response = new Response(image, {

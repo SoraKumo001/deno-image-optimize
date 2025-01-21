@@ -2,22 +2,19 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "npm:wasm-image-optimization": "npm:wasm-image-optimization@1.1.2",
-      "npm:wasm-image-optimization@^1.1.2": "npm:wasm-image-optimization@1.1.2"
+      "npm:@node-libraries/semaphore": "npm:@node-libraries/semaphore@1.0.3",
+      "npm:wasm-image-optimization": "npm:wasm-image-optimization@1.1.2"
     },
     "npm": {
+      "@node-libraries/semaphore@1.0.3": {
+        "integrity": "sha512-rHAzAaVa8hvJFmy9F9Y0sCZeIpaoSodCUXG/p1Fmui6qdsTXnJ5o0pjHec247bOhcF0dozYXERVOLo1TQ6XUIQ==",
+        "dependencies": {}
+      },
       "wasm-image-optimization@1.1.2": {
         "integrity": "sha512-GQqo7vFZyEVenGPJNf6mcRa/ZkVGGFKnZrjQJ6+DX0aCNn6UKvTFCmwq/1vOTbM625poMyZJI/9KVkyAz8JETQ==",
         "dependencies": {}
       }
     }
   },
-  "remote": {},
-  "workspace": {
-    "packageJson": {
-      "dependencies": [
-        "npm:wasm-image-optimization@^1.1.2"
-      ]
-    }
-  }
+  "remote": {}
 }

@@ -14,6 +14,7 @@ https://xxxx.deno.dev/?url=https://xxx.png&q=80&w=200
 
 ```ts
 import { optimizeImage } from "npm:wasm-image-optimization/esm";
+import { semaphore } from "npm:@node-libraries/semaphore";
 
 const isValidUrl = (url: string) => {
   try {
@@ -24,35 +25,42 @@ const isValidUrl = (url: string) => {
   }
 };
 
-const cache = await caches.open("image-cache");
+const isType = (accept: string | null, type: string) => {
+  return (
+    accept
+      ?.split(",")
+      .map((format) => format.trim())
+      .some((format) => [`image/${type}`, "*/*", "image/*"].includes(format)) ??
+    true
+  );
+};
+
+const s = semaphore(1);
 
 Deno.serve(async (request) => {
+  const url = new URL(request.url);
+  const params = url.searchParams;
+  const type = ["avif", "webp", "png", "jpeg"].find(
+    (v) => v === params.get("type")
+  ) as "avif" | "webp" | "png" | "jpeg" | undefined;
+  const accept = request.headers.get("accept");
+  const isAvif = isType(accept, "avif");
+  const isWebp = isType(accept, "webp");
+
+  const cache = await caches.open(
+    `image-${isAvif ? "-avif" : ""}${isWebp ? "-webp" : ""}`
+  );
+
   const cached = await cache.match(request);
   if (cached) {
     return cached;
   }
-
-  const url = new URL(request.url);
-  const params = url.searchParams;
-  const type = ["webp", "png", "jpeg"].find((v) => v === params.get("type")) as
-    | "webp"
-    | "png"
-    | "jpeg"
-    | undefined;
-  const accept = request.headers.get("accept");
-  const isWebp =
-    accept
-      ?.split(",")
-      .map((format) => format.trim())
-      .some((format) => ["image/webp", "*/*", "image/*"].includes(format)) ??
-    true;
 
   const imageUrl = params.get("url");
   if (!imageUrl || !isValidUrl(imageUrl)) {
     return new Response("url is required", { status: 400 });
   }
 
-  url.searchParams.append("webp", isWebp.toString());
   const cacheKey = new Request(url.toString());
   const cachedResponse = await cache.match(cacheKey);
   if (cachedResponse) {
@@ -86,11 +94,26 @@ Deno.serve(async (request) => {
   }
 
   const format =
-    type ?? (isWebp ? "webp" : contentType === "image/jpeg" ? "jpeg" : "png");
+    type ??
+    (isAvif
+      ? "avif"
+      : isWebp
+      ? "webp"
+      : contentType === "image/jpeg"
+      ? "jpeg"
+      : "png");
+
+  using _r = {
+    [Symbol.dispose]: ()=>{
+      s.release();
+    }
+  }
+  await s.acquire();
+
   const image = await optimizeImage({
     image: srcImage,
-    width: width ? parseInt(width) : undefined,
-    quality: quality ? parseInt(quality) : undefined,
+    width: width ? Number(width) : undefined,
+    quality: quality ? Number(quality) : undefined,
     format,
   });
   const response = new Response(image, {
@@ -103,4 +126,5 @@ Deno.serve(async (request) => {
   cache.put(request, response.clone());
   return response;
 });
+
 ```
